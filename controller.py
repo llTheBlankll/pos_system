@@ -27,6 +27,22 @@ def info_message(message: str) -> str:
     return termcolor.colored(message, color="cyan")
 
 
+# Coloring
+class color:
+    def red(message):
+        return termcolor.colored(message, color="red")
+    
+    def blue(message):
+        return termcolor.colored(message, color="blue")
+    
+    def yellow(message):
+        return termcolor.colored(message, color="yellow")
+    
+    def magenta(message):
+        return termcolor.colored(message, color="magenta")
+    
+
+
 def bye_message() -> None:
     print(info_message("Thank you for using our POS System! :)"))
 
@@ -124,6 +140,21 @@ def search_product(description: str) -> str:
                                                     "item_quantity AS 'Quantity' FROM item " +
                                                     f"WHERE item_description LIKE '%{description}%'")
     return prettytable.from_db_cursor(possible_items)
+
+
+def findbyItemExistsByProductCode(product_code: int) -> bool:
+    '''
+    Check if the item in the database exists by product code.
+    
+    returns bool:
+        True: The product exists and can be manipulated.
+        False: The product doesn't exist.
+    '''
+    row = sqlite_execute("SELECT * FROM item WHERE product_code = ?", (product_code,))
+    if row == None:
+        return False
+    
+    return True
 
 
 def get_item(product_code: int) -> Dict or None:
