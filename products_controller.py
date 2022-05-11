@@ -92,6 +92,7 @@ def add_product():
 
 
 def delete_product():
+    clear()
     # If there is no item on the database, then this section is not available like the others (update, search, and delete).
     if no_items_in_list() == True:
         print(controller.info_message("To delete a product, you need to add some first."))
