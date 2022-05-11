@@ -162,14 +162,15 @@ def update_product():
         product_code = str(input(""))
         
         # Check if the item exists.
-        if not controller.findbyItemExistsByProductCode(product_code):
+        if controller.findbyItemExistsByProductCode(product_code) == False:
             print(controller.error_message(f"Product code {product_code} doesn't exist."))
             time.sleep(1)
             update_product()
         
-        new_description = str(input("Description: "))
-        new_price = int(input("Price: "))
-        new_quantity = int(input("Quantity: "))
+        new_description = str(input("New Description: "))
+        new_price = int(input("New Price: "))
+        new_quantity = int(input("New Quantity: "))
+        print("")
         
         if new_description == "":
             print(controller.error_message("New Description cannot be empty."))
@@ -185,17 +186,34 @@ def update_product():
             update_product()
         else:
             item: Dict = controller.get_item(product_code)
-            print(controller.info_message("Comparison, Old Data vs New Data:"))
-            print(f"Product Code: {color.magenta(item[1])}")
-            print(f"Product Description: {color.magenta(item[2])}")
-            print(f"Product Price: {color.magenta(item[3])}")
-            print(f"Product Quantity: {color.magenta(item[4])}")
-            print(controller.info_message("New Data:"))
-            print(f"Product Code: {item[1]}")
-            print(f"New Product Description: {new_description}")
-            print(f"New Product Price: {controller.colornew_price}")
-            print(f"New Product Quantity: {new_quantity}")
-            
+            print(controller.info_message("Comparison, Old Data vs New Data:\n"))
+            print(controller.info_message("Old data: \n"))
+            print(f"Product Code: {color.magenta(item.get('item_product_code'))}")
+            print(f"Product Description: {color.magenta(item.get('item_description'))}")
+            print(f"Product Price: {color.magenta(item.get('item_price'))}")
+            print(f"Product Quantity: {color.magenta(item.get('item_quantity'))}\n")
+            print(controller.info_message("New data:\n"))
+            print(f"Product Code: {color.blue(item.get('item_product_code'))}")
+            print(f"New Product Description: {color.blue(new_description)}")
+            print(f"New Product Price: {color.blue(new_price)}")
+            print(f"New Product Quantity: {color.blue(new_quantity)}\n")
+            confirmation = str(input("Are you sure you want to update the item? y/n: "))
+            if confirmation.lower() == "yes" or confirmation.lower() == "y":
+                if controller.update_product(product_code, new_description, new_price, new_quantity):
+                    print(controller.info_message(f"Product {product_code} successfully updated."))
+                    time.sleep(1.5)
+                    pos_system.main()
+                else:
+                    print(controller.error_message("Item cannot be updated."))
+                    time.sleep(1.5)
+                    pos_system.main()
+            else:
+                pos_system.main()
+    except ValueError:
+        print(controller.error_message("Please enter correct value on each fields.\n" +
+                                       "You may be entering alphabets on number fields like in the price and quantity."))
+        time.sleep(1.5)
+        pos_system.main()
     except KeyboardInterrupt:
         print(controller.info_message("\nGoing back to dashboard..."))
         time.sleep(1)

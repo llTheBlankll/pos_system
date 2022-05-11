@@ -107,8 +107,22 @@ def sqlite_execute(statement: str, params: Tuple = ()) -> sqlite3.Cursor:
     return db_cursor.execute(statement, params)
 
 
-def update_product(product_code: int, to_description: str, to_price: int, to_quantity: int):
-    pass
+def update_product(product_code: int, to_description: str, to_price: int, to_quantity: int) -> bool:
+    '''
+    Update the existing data by product code.
+    
+    Returns [bool]:
+        True: Item was updated successfully.
+        False: It was not updated.
+    '''
+    update_cursor = sqlite_execute("UPDATE item SET item_description = ?, item_price = ?, item_quantity = ? WHERE item_product_code = ?",
+                                   (to_description, to_price, to_quantity, product_code))
+    # Commit changes to database.
+    con.commit()
+    if update_cursor.rowcount >= 1:
+        return True
+    
+    return False
 
 
 def delete_product(product_code: int) -> bool:
@@ -150,8 +164,8 @@ def findbyItemExistsByProductCode(product_code: int) -> bool:
         True: The product exists and can be manipulated.
         False: The product doesn't exist.
     '''
-    row = sqlite_execute("SELECT * FROM item WHERE product_code = ?", (product_code,))
-    if row == None:
+    row = sqlite_execute("SELECT COUNT(*) FROM item WHERE item_product_code = ?", (product_code,))
+    if row.fetchone()[0] <= 0:
         return False
     
     return True

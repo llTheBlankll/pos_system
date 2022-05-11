@@ -5,6 +5,7 @@ import controller
 import products_controller
 import colorama
 
+from controller import color
 from controller import clear
 from selling_section import selling_section
 
@@ -19,11 +20,11 @@ def main():
     This is like the ui for the system for you to interact with.
     '''
     clear()
-    print(f"Date: {datetime.datetime.now()}")
+    print(f"Date: {color.red(datetime.datetime.now())}")
     if controller.get_item_list_size() <= 0:
-        print("There is no item on the list.")
+        print(color.yellow("There's no item on the list."))
     else:
-        print(controller.get_item_list())
+        print(color.magenta(controller.get_item_list()))
     print("1. Selling Section")
     print("2. Search Products")
     print("3. Add Products")
