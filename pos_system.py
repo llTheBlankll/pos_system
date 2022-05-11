@@ -47,10 +47,6 @@ def main():
             print(controller.error_message("%s is not an option." % answer))
             time.sleep(1.5)
             main()
-    except ValueError:
-        print(controller.error_message("Any kind of alphabets are not allowed, only the numbers are."))
-        time.sleep(1.5)
-        main()
     except KeyboardInterrupt:
         clear()
         controller.bye_message()
